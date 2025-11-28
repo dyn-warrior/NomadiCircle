@@ -131,6 +131,17 @@ export const requestAccessToken = () => {
  * Get current access token (requests new one if needed)
  */
 export const getAccessToken = async () => {
+  // Check if OAuth is initialized
+  if (!tokenClient) {
+    console.log('⚠️ OAuth not initialized, initializing now...')
+    try {
+      await initOAuth()
+    } catch (error) {
+      console.error('❌ Failed to initialize OAuth:', error)
+      throw new Error('OAuth initialization required. Please refresh the page.')
+    }
+  }
+  
   // Check if token is still valid
   if (accessToken && tokenExpiresAt && Date.now() < tokenExpiresAt) {
     return accessToken
