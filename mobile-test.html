@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Access - NomadiCircle</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .url-list {
+            text-align: left;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .url-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            word-break: break-all;
+        }
+        .url-item a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .instructions {
+            text-align: left;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .instructions h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .troubleshoot {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 NomadiCircle - Mobile Testing</h1>
+        
+        <div class="url-list">
+            <h3 style="color: #667eea; margin-top: 0;">Try these URLs on your mobile:</h3>
+            
+            <div class="url-item">
+                <strong>URL 1:</strong><br>
+                <a href="http://10.10.2.205:5173/" target="_blank">http://10.10.2.205:5173/</a>
+            </div>
+            
+            <div class="url-item">
+                <strong>URL 2:</strong><br>
+                <a href="http://192.168.56.1:5173/" target="_blank">http://192.168.56.1:5173/</a>
+            </div>
+            
+            <div class="url-item">
+                <strong>URL 3:</strong><br>
+                <a href="http://172.18.80.1:5173/" target="_blank">http://172.18.80.1:5173/</a>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Quick Steps:</h3>
+            <ol>
+                <li>Make sure your phone is connected to the <strong>SAME WiFi</strong> as this computer</li>
+                <li>On your phone, open a web browser (Chrome, Safari, etc.)</li>
+                <li>Type or copy one of the URLs above</li>
+                <li>If one doesn't work, try the next one</li>
+            </ol>
+        </div>
+        
+        <div class="troubleshoot">
+            <h3>🔧 If URLs don't work:</h3>
+            <ol>
+                <li><strong>Check WiFi:</strong> Both devices must be on the same network</li>
+                <li><strong>Disable VPN:</strong> If you have a VPN running, turn it off</li>
+                <li><strong>Check Firewall:</strong> Windows Firewall might be blocking the connection</li>
+                <li><strong>Try Mobile Hotspot:</strong> 
+                    <ul>
+                        <li>Turn on mobile hotspot on your phone</li>
+                        <li>Connect your PC to the phone's hotspot</li>
+                        <li>Restart the dev server (see button below)</li>
+                        <li>New IP will be shown in terminal</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="note">
+            <strong>💡 Alternative:</strong> Use Chrome DevTools Device Emulator:
+            <ol>
+                <li>Open <a href="http://localhost:5173/" target="_blank">http://localhost:5173/</a> in Chrome</li>
+                <li>Press F12 to open DevTools</li>
+                <li>Click the device icon (Toggle device toolbar) or press Ctrl+Shift+M</li>
+                <li>Select a mobile device from the dropdown</li>
+            </ol>
+        </div>
+        
+        <button onclick="window.open('http://localhost:5173/', '_blank')">
+            🖥️ Open on Desktop Browser
+        </button>
+    </div>
+</body>
+</html>
