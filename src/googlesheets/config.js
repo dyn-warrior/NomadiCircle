@@ -26,36 +26,23 @@ const getSpreadsheetId = () => {
 
 /**
  * Make a request to Google Sheets API
- * Uses OAuth2 token for write operations, API key for read operations
+ * Uses OAuth2 for all operations (reads and writes)
  */
 const makeApiRequest = async (sheetName, endpoint, options = {}) => {
   const spreadsheetId = getSpreadsheetId()
-  const isWriteOperation = options.method && options.method !== 'GET'
   
-  let url, headers
+  // Use OAuth2 for all operations
+  console.log('🔐 Using OAuth2 for operation')
+  const accessToken = await getAccessToken()
+  if (!accessToken) {
+    throw new Error('OAuth2 token required. Please sign in with Google.')
+  }
   
-  if (isWriteOperation) {
-    // Write operation - MUST use OAuth2
-    console.log('🔐 Using OAuth2 for write operation')
-    const accessToken = await getAccessToken()
-    if (!accessToken) {
-      throw new Error('OAuth2 token required for write operations. Please sign in with Google.')
-    }
-    
-    url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}${endpoint}`
-    headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-      ...options.headers,
-    }
-  } else {
-    // Read operation - can use API key
-    console.log('🔑 Using API key for read operation')
-    url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}${endpoint}?key=${GOOGLE_API_KEY}`
-    headers = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    }
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}${endpoint}`
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`,
+    ...options.headers,
   }
   
   const response = await fetch(url, {
