@@ -1,6 +1,10 @@
 // OTP generation and verification for Google Sheets authentication
-// Note: In production, OTPs should be sent via email service (SendGrid, AWS SES, etc.)
-// For now, storing OTPs in localStorage for testing
+import emailjs from '@emailjs/browser'
+
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = 'service_vexladb'
+const EMAILJS_TEMPLATE_ID = 'template_uhw2q5w'
+const EMAILJS_PUBLIC_KEY = 'oqYikPwQXLJgbRBdS'
 
 /**
  * Generate a 6-digit OTP code
@@ -20,7 +24,7 @@ export const sendOTP = async (email) => {
     
     // Generate OTP
     const otp = generateOTP()
-    console.log('🔢 Generated OTP:', otp) // TODO: Remove in production
+    console.log('🔢 Generated OTP:', otp)
     
     // Store OTP with expiry (5 minutes)
     const otpData = {
@@ -32,23 +36,54 @@ export const sendOTP = async (email) => {
     
     localStorage.setItem(`nomadic_otp_${email}`, JSON.stringify(otpData))
     
-    // TODO: In production, send email via service like SendGrid
-    // For now, just log it (user will see in console for testing)
-    console.log(`
+    // Calculate expiry time (5 minutes from now)
+    const expiryTime = new Date(Date.now() + 5 * 60 * 1000).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })
+    
+    // Send OTP via EmailJS
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          to_email: email,
+          passcode: otp,
+          time: expiryTime,
+          user_email: email
+        },
+        EMAILJS_PUBLIC_KEY
+      )
+      
+      console.log('✅ OTP sent successfully to:', email)
+      
+      return {
+        success: true,
+        message: `Verification code sent to ${email}`
+      }
+    } catch (emailError) {
+      console.error('❌ Error sending email:', emailError)
+      
+      // Fallback: show OTP in console/alert for testing
+      console.log(`
 ╔═══════════════════════════════════╗
-║   YOUR OTP CODE (FOR TESTING)    ║
+║   YOUR OTP CODE (EMAIL FAILED)   ║
 ║                                   ║
 ║           ${otp}                  ║
 ║                                   ║
 ║   Valid for 5 minutes             ║
 ╚═══════════════════════════════════╝
-    `)
-    
-    alert(`OTP Code (for testing): ${otp}\n\nIn production, this will be sent to your email.`)
-    
-    return {
-      success: true,
-      otp: otp // Only return for testing; remove in production
+      `)
+      
+      alert(`Email delivery failed. Your OTP code is: ${otp}\n\nPlease check EmailJS template configuration.`)
+      
+      return {
+        success: true,
+        message: 'OTP generated (email delivery failed, check console)',
+        otp: otp // Only for testing
+      }
     }
   } catch (error) {
     console.error('❌ Error sending OTP:', error)
